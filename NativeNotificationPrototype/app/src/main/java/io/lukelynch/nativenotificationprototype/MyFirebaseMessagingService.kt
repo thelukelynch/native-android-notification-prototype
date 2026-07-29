@@ -3,6 +3,7 @@ package io.lukelynch.nativenotificationprototype
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -43,6 +44,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun sendNotification(title: String?, body: String?) {
         val channelId = "fcm_notifications"
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -52,6 +54,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             )
             channel.enableVibration(true)
             channel.enableLights(true)
+            channel.setSound(soundUri, android.media.AudioAttributes.Builder().setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION).build())
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -62,6 +65,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setSound(soundUri)
             .build()
 
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
