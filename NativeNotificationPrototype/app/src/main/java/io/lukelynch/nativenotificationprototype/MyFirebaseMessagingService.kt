@@ -41,11 +41,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendNotification(title: String?, body: String?) {
-        val channelId = "default_channel"
+        val channelId = "fcm_notifications"
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Default", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(
+                channelId,
+                "Firebase Messages",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel.enableVibration(true)
+            channel.enableLights(true)
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -54,9 +60,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setContentText(body ?: "")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
 
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+        Log.d(TAG, "Notification sent: $title - $body")
     }
 
     companion object {
