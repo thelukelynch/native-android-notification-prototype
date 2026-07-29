@@ -39,8 +39,21 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
+    override fun onResume() {
+        super.onResume()
+        MyFirebaseMessagingService.setAppInForeground(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MyFirebaseMessagingService.setAppInForeground(false)
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+}
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current

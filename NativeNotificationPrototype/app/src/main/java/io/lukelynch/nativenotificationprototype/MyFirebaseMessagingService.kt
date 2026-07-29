@@ -24,14 +24,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.notification != null) {
             title = remoteMessage.notification!!.title
             body = remoteMessage.notification!!.body
-            sendNotification(title, body)
         } else {
             // Otherwise, handle data payload
             title = remoteMessage.data["title"]
             body = remoteMessage.data["body"]
+        }
+
+        // Only show system notification if app is in background
+        if (!isAppInForeground()) {
             sendNotification(title, body)
         }
 
+        // Always update the in-app dialog
         messageStateFlow.value = FCMMessage(title, body)
     }
 
@@ -75,9 +79,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     companion object {
         private const val TAG = "MyFcmService"
         private val messageStateFlow = MutableStateFlow<FCMMessage?>(null)
+        private var appInForeground = false
+
         fun getMessageFlow(): StateFlow<FCMMessage?> = messageStateFlow
         fun clearMessage() {
             messageStateFlow.value = null
         }
+        fun setAppInForeground(inForeground: Boolean) {
+            appInForeground = inForeground
+        }
+        fun isAppInForeground(): Boolean = appInForeground
     }
 }
