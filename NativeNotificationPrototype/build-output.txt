@@ -1,0 +1,57 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: :app:assembleDebug
+> Task :app:preBuild UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:processDebugGoogleServices
+> Task :app:generateDebugResources
+> Task :app:desugarDebugFileDependencies
+> Task :app:writeDebugAppMetadata
+> Task :app:mapDebugSourceSetPaths
+> Task :app:extractDeepLinksDebug
+> Task :app:validateSigningDebug
+> Task :app:javaPreCompileDebug
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:packageDebugResources
+> Task :app:mergeDebugJniLibFolders
+> Task :app:processDebugNavigationResources
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:checkDebugAarMetadata
+> Task :app:checkDebugDuplicateClasses
+> Task :app:compileDebugNavigationResources
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:generateDebugGlobalSynthetics
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugNativeLibs
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so. Run with --info option to learn more.
+
+> Task :app:mergeLibDexDebug
+> Task :app:mergeDebugResources
+> Task :app:processDebugResources
+
+> Task :app:compileDebugKotlin
+w: file:///Users/lukelynch/repos/android/NativeNotificationPrototype/app/src/main/java/io/lukelynch/nativenotificationprototype/MyFirebaseMessagingService.kt:28:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///Users/lukelynch/repos/android/NativeNotificationPrototype/app/src/main/java/io/lukelynch/nativenotificationprototype/MyFirebaseMessagingService.kt:29:15 'fun onNewToken(p0: String): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:processDebugJavaRes
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:mergeExtDexDebug
+> Task :app:packageDebug
+> Task :app:assembleDebug
+> Task :app:createDebugApkListingFileRedirect
+
+BUILD SUCCESSFUL in 48s
+37 actionable tasks: 37 executed
+Configuration cache entry stored.
