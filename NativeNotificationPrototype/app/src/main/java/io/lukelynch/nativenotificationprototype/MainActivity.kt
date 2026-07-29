@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +44,21 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    val latestMessage = MyFirebaseMessagingService.getMessageFlow().collectAsState()
+
+    if (latestMessage.value != null) {
+        AlertDialog(
+            onDismissRequest = { MyFirebaseMessagingService.clearMessage() },
+            title = { Text(latestMessage.value?.title ?: "Notification") },
+            text = { Text(latestMessage.value?.body ?: "") },
+            confirmButton = {
+                Button(onClick = { MyFirebaseMessagingService.clearMessage() }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
     Column(modifier = modifier.padding(16.dp)) {
         Text(text = "Hello $name!")
         Spacer(modifier = Modifier.height(12.dp))

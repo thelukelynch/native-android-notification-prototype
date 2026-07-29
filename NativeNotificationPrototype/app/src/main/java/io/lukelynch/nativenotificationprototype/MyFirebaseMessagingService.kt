@@ -1,0 +1,70 @@
+package io.lukelynch.nativenotificationprototype
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
+data class FCMMessage(val title: String?, val body: String?)
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        Log.d(TAG, "From: ${remoteMessage.from}")
+
+        val title: String?
+        val body: String?
+
+        // If the message contains a notification payload, show it
+        if (remoteMessage.notification != null) {
+            title = remoteMessage.notification!!.title
+            body = remoteMessage.notification!!.body
+            sendNotification(title, body)
+        } else {
+            // Otherwise, handle data payload
+            title = remoteMessage.data["title"]
+            body = remoteMessage.data["body"]
+            sendNotification(title, body)
+        }
+
+        messageStateFlow.value = FCMMessage(title, body)
+    }
+
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+        Log.d(TAG, "Refreshed token: $token")
+        // TODO: send token to app server if required
+    }
+
+    private fun sendNotification(title: String?, body: String?) {
+        val channelId = "default_channel"
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Default", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setContentTitle(title ?: "Notification")
+            .setContentText(body ?: "")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+    }
+
+    companion object {
+        private const val TAG = "MyFcmService"
+        private val messageStateFlow = MutableStateFlow<FCMMessage?>(null)
+        fun getMessageFlow(): StateFlow<FCMMessage?> = messageStateFlow
+        fun clearMessage() {
+            messageStateFlow.value = null
+        }
+    }
+}
